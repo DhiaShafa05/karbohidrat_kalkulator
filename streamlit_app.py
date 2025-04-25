@@ -4,60 +4,78 @@ import streamlit as st
 st.set_page_config(page_title="Kebutuhan Karbohidrat Harian 🍚", page_icon="🍠", layout="centered")
 
 st.title("🍚 Kebutuhan Karbohidrat Harian")
-st.markdown("### Hitung kebutuhan karbohidrat harianmu dan temukan makanan yang cocok untuk mencapainya!")
+st.markdown("### Hitung kebutuhan karbohidratmu berdasarkan usia, berat badan, dan aktivitas harian 💪")
 
 # Sidebar - Data Pribadi
 st.sidebar.header("📋 Data Pribadi")
 
-usia = st.sidebar.number_input("Usia (tahun)", min_value=1, max_value=100, value=25)
+umur = st.sidebar.number_input("Usia (tahun)", min_value=1, max_value=100, value=25)
 jenis_kelamin = st.sidebar.radio("Jenis Kelamin", ["Laki-laki", "Perempuan"])
+berat_badan = st.sidebar.number_input("Berat Badan (kg)", min_value=20.0, max_value=200.0, value=60.0)
+tinggi_badan = st.sidebar.number_input("Tinggi Badan (cm)", min_value=100.0, max_value=220.0, value=165.0)
+aktivitas = st.sidebar.selectbox(
+    "Tingkat Aktivitas Harian",
+    ["Rendah (jarang olahraga)", "Sedang (aktivitas fisik ringan)", "Tinggi (sering olahraga/kerja berat)"]
+)
 
-# Fungsi untuk menentukan kebutuhan karbohidrat berdasarkan usia dan jenis kelamin
-def kebutuhan_karbohidrat(usia, jenis_kelamin):
+# Fungsi kebutuhan berdasarkan usia dan jenis kelamin (data dari Alodokter)
+def kebutuhan_karbo_usia(umur, jenis_kelamin):
     if jenis_kelamin == "Laki-laki":
-        if 10 <= usia <= 12:
+        if 10 <= umur <= 12:
             return 300
-        elif 13 <= usia <= 15:
+        elif 13 <= umur <= 15:
             return 350
-        elif 16 <= usia <= 18:
+        elif 16 <= umur <= 18:
             return 400
-        elif 19 <= usia <= 29:
+        elif 19 <= umur <= 29:
             return 430
-        elif 30 <= usia <= 49:
+        elif 30 <= umur <= 49:
             return 415
-        elif 50 <= usia <= 64:
+        elif 50 <= umur <= 64:
             return 340
-        elif 65 <= usia <= 80:
+        elif 65 <= umur <= 80:
             return 275
-        elif usia > 80:
+        elif umur > 80:
             return 235
         else:
-            return 250  # Default untuk usia di bawah 10 tahun
+            return 250
     else:  # Perempuan
-        if 10 <= usia <= 12:
+        if 10 <= umur <= 12:
             return 280
-        elif 13 <= usia <= 18:
+        elif 13 <= umur <= 18:
             return 300
-        elif 19 <= usia <= 29:
+        elif 19 <= umur <= 29:
             return 360
-        elif 30 <= usia <= 49:
+        elif 30 <= umur <= 49:
             return 340
-        elif 50 <= usia <= 64:
+        elif 50 <= umur <= 64:
             return 280
-        elif 65 <= usia <= 80:
+        elif 65 <= umur <= 80:
             return 230
-        elif usia > 80:
+        elif umur > 80:
             return 200
         else:
-            return 250  # Default untuk usia di bawah 10 tahun
+            return 250
 
-# Hitung kebutuhan karbohidrat
-kebutuhan = kebutuhan_karbohidrat(usia, jenis_kelamin)
+# Fungsi tambahan berdasarkan berat badan dan aktivitas
+def faktor_aktivitas(aktivitas):
+    if aktivitas == "Rendah (jarang olahraga)":
+        return 3
+    elif aktivitas == "Sedang (aktivitas fisik ringan)":
+        return 5
+    else:
+        return 7
 
-st.success(f"🎯 Kebutuhan karbohidrat harianmu adalah sekitar **{kebutuhan} gram** per hari.")
+# Hitung kebutuhan akhir: ambil nilai rata-rata dari dua pendekatan
+kebutuhan_dari_usia = kebutuhan_karbo_usia(umur, jenis_kelamin)
+kebutuhan_dari_aktivitas = berat_badan * faktor_aktivitas(aktivitas)
+kebutuhan_akhir = round((kebutuhan_dari_usia + kebutuhan_dari_aktivitas) / 2)
 
-# Daftar makanan dengan kandungan karbohidrat per 100 gram
-st.markdown("## 🥗 Rekomendasi Makanan Harian")
+# Tampilkan hasil
+st.success(f"🎯 Kebutuhan karbohidrat harianmu diperkirakan sekitar **{kebutuhan_akhir} gram** per hari.")
+
+# Daftar makanan dan kandungan karbohidrat per 100 gram
+st.markdown("## 🥗 Rekomendasi Makanan untuk Mencapai Target")
 
 makanan_karbo = [
     {"nama": "Nasi Putih", "karbo_per_100g": 40},
@@ -72,16 +90,13 @@ makanan_karbo = [
     {"nama": "Apel", "karbo_per_100g": 16},
 ]
 
-st.markdown("Berikut beberapa pilihan makanan dan takaran untuk memenuhi kebutuhanmu:")
-
 for makanan in makanan_karbo:
-    jumlah_diperlukan = kebutuhan / makanan["karbo_per_100g"] * 100
-    st.markdown(f"- **{makanan['nama']}** → sekitar **{int(jumlah_diperlukan)} gram** per hari.")
+    jumlah = kebutuhan_akhir / makanan["karbo_per_100g"] * 100
+    st.markdown(f"- **{makanan['nama']}** → sekitar **{int(jumlah)} gram**")
 
 # Gambar ilustrasi
-st.image("https://cdn-icons-png.flaticon.com/512/135/135620.png", width=80, caption="Tetap sehat ya!")
+st.image("https://cdn-icons-png.flaticon.com/512/135/135620.png", width=80, caption="Tetap sehat dan seimbang ya!")
 
 # Footer
 st.markdown("---")
 st.markdown("<center><small>📘 Projek Tugas Kampus | Dibuat dengan ❤️ oleh [kelompok 3 pmip e1]</small></center>", unsafe_allow_html=True)
-
