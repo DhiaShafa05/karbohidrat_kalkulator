@@ -29,9 +29,11 @@ aktivitas = st.selectbox(
 
 # Faktor aktivitas berdasarkan pilihan
 faktor_aktivitas = {
+    "Sangat Rendah (tidak aktif)": 1.2,
     "Rendah (olahraga ringan 1-3 hari/minggu)": 1.375,
     "Sedang (olahraga sedang 3-5 hari/minggu)": 1.55,
     "Tinggi (olahraga berat 6-7 hari/minggu)": 1.725,
+    "Sangat Tinggi (aktivitas fisik berat harian)": 1.9
 }
 
 # Fungsi menghitung BMR dan TDEE
@@ -45,3 +47,4 @@ def hitung_bmr(berat, tinggi, usia, jenis_kelamin):
 if st.button("Hitung Kebutuhan Karbohidrat"):
     bmr = hitung_bmr(berat, tinggi, usia, jenis_kelamin)
     tdee = bmr * faktor_aktivitas[aktivitas]  # Total kebutuhan energi_*
+
