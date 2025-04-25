@@ -33,4 +33,23 @@ makanan_karbo = [
     {"nama": "Nasi Putih", "karbo_per_100g": 28},
     {"nama": "Kentang Rebus", "karbo_per_100g": 17},
     {"nama": "Ubi Jalar", "karbo_per_100g": 20},
-    {"nama
+    {"nama": "Roti Gandum", "karbo_per_100g": 40},
+    {"nama": "Jagung", "karbo_per_100g": 19},
+    {"nama": "Oatmeal", "karbo_per_100g": 66},
+]
+
+st.markdown("Berikut beberapa pilihan makanan dan takaran untuk memenuhi kebutuhanmu:")
+
+for makanan in makanan_karbo:
+    jumlah_diperlukan = kebutuhan_karbo / makanan["karbo_per_100g"] * 100
+    st.markdown(f"- **{makanan['nama']}** → sekitar **{int(jumlah_diperlukan)} gram** per hari.")
+
+st.markdown("---")
+st.markdown("💡 Tips: Kombinasikan berbagai sumber karbohidrat agar pola makan lebih seimbang dan tidak membosankan!")
+
+# Tambahan estetika
+st.image("https://cdn-icons-png.flaticon.com/512/135/135620.png", width=80, caption="Tetap sehat ya!")
+
+# Footer
+st.markdown("---")
+st.markdown("<center><small>📘 Projek Tugas Kampus | Dibuat dengan ❤️ oleh [KELOMPOK 3 PMIP E1]</small></center>", unsafe_allow_html=True)
